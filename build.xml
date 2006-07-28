@@ -29,9 +29,11 @@
           target: dev              
          ================================= -->
     <target name="dev" description="--> sends jar to firefox folder">
-        <copy overwrite="true" todir="${user.home}\Application Data\Mozilla\Firefox\Profiles\dwkwpztb.dev\extensions\guidedog@jdgiotta.googlepages.com">
+        <copy overwrite="true" todir="${user.home}\Application Data\Mozilla\Firefox\Profiles\pkwjnamr.dev\extensions\guidedog@jdgiotta.googlepages.com">
 			<fileset dir="src/" id="devSet" excludes="**/chrome.manifest"/>
         </copy>
+    	
+    	<copy overwrite="true" file="./chrome.manifest" todir="${user.home}\Application Data\Mozilla\Firefox\Profiles\pkwjnamr.dev\extensions\guidedog@jdgiotta.googlepages.com" />
     </target>
 
 

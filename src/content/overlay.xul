@@ -3,7 +3,7 @@
 <overlay id="guidedog-overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 	<script type="application/x-javascript" src="guidedog.js" />
 	
-	<command id="cmd_dgTogglePanel" oncommand="GuideDog.togglePanel(false);"/>
+	
 
 	<vbox id="appcontent">
 		<splitter id="gdContentSplitter" collapsed="true">
@@ -11,15 +11,18 @@
   		</splitter>
 		<vbox id="gdContentBox" collapsed="true">
 			<toolbox id="gdToolbox">
+				<command id="cmd_dgTogglePanel" oncommand="GuideDog.togglePanel(false);"/>
+				<command id="cmd_dgOpenAbout" oncommand="GuideDog.openAboutUrl();" />
 		  		<toolbar id="gdToolbar">
-		  			<toolbarbutton id="gdStartButton" label="Start" style="border: thin dotted #00FF00;" />
-		  			<toolbarbutton id="gdStartButton" label="Stop" disabled="true" />
-		  			<toolbarbutton id="gdAboutButton" label="About" />
+		  			<toolbarbutton id="gdStartButton" label="Start" />
+		  			<toolbarbutton id="gdStopButton" label="Stop" disabled="true" />
+		  			<toolbarbutton id="gdClearButton" label="Clear" disabled="true" />
+		  			<toolbarbutton id="gdAboutButton" label="About" command="cmd_dgOpenAbout" />
 		  			<toolbarbutton id="gdCloseButton" label="Close" command="cmd_dgTogglePanel" />
 		  		</toolbar>
 	  		</toolbox>
 	  		
-	  		<tree id="httpTree" flex="1" style="height: 200px;" hidecolumnpicker="false" seltype="seltype">
+	  		<tree id="httpTree" flex="1" style="height: 100px;" hidecolumnpicker="false" seltype="seltype">
 				<treecols>
 					<treecol id="startCol" label="Started" flex="2" persist="width"/>
 					<splitter class="tree-splitter"/>
@@ -35,21 +38,54 @@
 					<splitter class="tree-splitter"/>
 					<treecol id="urlCol" label="URL" flex="1" persist="width"/>
 				</treecols>
-				<treechildren />
+				<treechildren>
+					<treeitem>
+						<treerow>
+							<treecell label="12:57:35.125"/>
+							<treecell label="0.079"/>
+							<treecell label="3981"/>
+							<treecell label="GET"/>
+							<treecell label="200"/>
+							<treecell label="text/html; charset=UTF-8"/>
+							<treecell label="http://www.google.com/"/>
+						</treerow>
+					</treeitem>
+					<treeitem>
+						<treerow>
+							<treecell label="12:57:35.219"/>
+							<treecell label="0.078"/>
+							<treecell label="2048"/>
+							<treecell label="GET"/>
+							<treecell label="200"/>
+							<treecell label="image/gif"/>
+							<treecell label="http://www.google.com/intl/en/images/logo.gif"/>
+						</treerow>
+					</treeitem>
+					<treeitem>
+						<treerow>
+							<treecell label="12:57:35.266"/>
+							<treecell label="0.094"/>
+							<treecell label="2048"/>
+							<treecell label="GET"/>
+							<treecell label="200"/>
+							<treecell label="image/png"/>
+							<treecell label="http://www.google.com/intl/en/images/cart30.png"/>
+						</treerow>
+					</treeitem>
+				</treechildren>
 			</tree>
-			<!-- TODO: need a grippy in the future -->
-			<splitter />
-			<tabbox flex="1" id="gdTabBox">
+			<!--splitter collapse="after" />
+			<tabbox flex="1" id="gdTabBox" align="stretch" style="height: 100px;">
 				<tabs>
-					<tab label="Summary"/>
+					<tab label="Summary" />
 					<tab label="Cache"/>
 					<tab label="Headers"/>
 					<tab label="Query String"/>
 					<tab label="POST Data"/>
 					<tab label="Content"/>
 				</tabs>
-				<tabpanels>
-					<tabpanel id="summarytab" flex="1">
+				<tabpanels flex="1">
+					<tabpanel id="summarytab">
 						<tree id="summaryTree" flex="1" hidecolumnpicker="false" seltype="seltype">
 							<treecols>
 								<treecol id="startCol" label="Action" flex="2" persist="width" />
@@ -62,7 +98,7 @@
 						</tree>
 					</tabpanel>
 					<tabpanel id="cachetab">
-						<tree id="cacheTree" flex="1" hidecolumnpicker="false" seltype="seltype" style="height: 200px;">
+						<tree id="cacheTree" flex="1" hidecolumnpicker="false" seltype="seltype">
 							<treecols>
 								<treecol id="startCol" label="Cache Info" flex="2" persist="width"/>
 								<splitter class="tree-splitter"/>
@@ -74,7 +110,7 @@
 						</tree>
 					</tabpanel>
 					<tabpanel id="headerstab">
-						<tree id="headersTree" flex="1" hidecolumnpicker="false" seltype="seltype" style="height: 200px;">
+						<tree id="headersTree" flex="1" hidecolumnpicker="false" seltype="seltype">
 							<treecols>
 								<treecol id="startCol" label="Header Name" flex="2" persist="width"/>
 								<splitter class="tree-splitter"/>
@@ -84,7 +120,7 @@
 						</tree>
 					</tabpanel>
 					<tabpanel id="querytab">
-						<tree id="queryTree" flex="1" hidecolumnpicker="false" seltype="seltype" style="height: 200px;">
+						<tree id="queryTree" flex="1" hidecolumnpicker="false" seltype="seltype">
 							<treecols>
 								<treecol id="startCol" label="Parameter" flex="2" persist="width"/>
 								<splitter class="tree-splitter"/>
@@ -93,8 +129,8 @@
 							<treechildren/>
 						</tree>
 					</tabpanel>
-					<tabpanel id="posttab" flex="1">
-						<tree id="postTree" flex="1" hidecolumnpicker="false" seltype="seltype" style="height: 200px;">
+					<tabpanel id="posttab">
+						<tree id="postTree" flex="1" hidecolumnpicker="false" seltype="seltype">
 							<treecols>
 								<treecol id="startCol" label="Parameter" flex="2" persist="width"/>
 								<splitter class="tree-splitter"/>
@@ -103,11 +139,17 @@
 							<treechildren/>
 						</tree>
 					</tabpanel>
-					<tabpanel id="contenttab" readonly="true">
-						<textbox multiline="true" value="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean massa nulla, nonummy quis, accumsan at, aliquet nec, sem. Nam non pede. Ut gravida. Vestibulum auctor massa vel nulla. Sed sed velit. Duis dolor. Nunc venenatis, nibh et pulvinar laoreet, nulla leo varius risus, nec eleifend enim arcu eget ipsum. Fusce posuere vulputate ligula. Sed augue nibh, eleifend eget, rutrum vitae, congue ac, massa. Donec pulvinar venenatis mauris. Donec hendrerit viverra leo. Vivamus lorem."/>
+					<tabpanel id="contenttab">
+						<textbox
+							readonly="true"
+							flex="1"
+							align="stretch"
+							multiline="true"
+							value="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean massa nulla, nonummy quis, accumsan at, aliquet nec, sem. Nam non pede. Ut gravida. Vestibulum auctor massa vel nulla. Sed sed velit. Duis dolor. Nunc venenatis, nibh et pulvinar laoreet, nulla leo varius risus, nec eleifend enim arcu eget ipsum. Fusce posuere vulputate ligula. Sed augue nibh, eleifend eget, rutrum vitae, congue ac, massa. Donec pulvinar venenatis mauris. Donec hendrerit viverra leo. Vivamus lorem."
+						/>
 					</tabpanel>
 				</tabpanels>
-			</tabbox>
+			</tabbox-->
 		</vbox>
 	</vbox>
 	
