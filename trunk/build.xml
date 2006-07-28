@@ -28,11 +28,10 @@
 	<!-- ================================= 
           target: dev              
          ================================= -->
-    <target name="dev" depends="createjar" description="--> sends jar to firefox folder">
-        <copy
-        	file="src/chrome/${jar.name}"
-        	todir="${user.home}\Application Data\Mozilla\Firefox\Profiles\9uhz4lpo.default\extensions\guidedog@jdgiotta.googlepages.com\chrome"
-        />
+    <target name="dev" description="--> sends jar to firefox folder">
+        <copy overwrite="true" todir="${user.home}\Application Data\Mozilla\Firefox\Profiles\dwkwpztb.dev\extensions\guidedog@jdgiotta.googlepages.com">
+			<fileset dir="src/" id="devSet" excludes="**/chrome.manifest"/>
+        </copy>
     </target>
 
 
