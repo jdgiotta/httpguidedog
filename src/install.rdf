@@ -4,8 +4,8 @@
 	<Description about="urn:mozilla:install-manifest">
 	  
 		<em:id>guidedog@jdgiotta.googlepages.com</em:id>
-		<em:name>GuideDog (HTTPWatch Clone)</em:name>
-		<em:version>0.1.8</em:version>
+		<em:name>HTTPGuideDog</em:name>
+		<em:version>0.1.9</em:version>
 		<em:description>Like the popular IE tool HTTPWatch. GuideDog brings all the http request information under one easy to read viewer</em:description>
 		<em:creator>John D Giotta</em:creator>
 		<!-- optional items -->

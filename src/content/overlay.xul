@@ -3,7 +3,7 @@
 <overlay id="guidedog-overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 	<script type="application/x-javascript" src="guidedog.js" />
 	
-	<command id="cmd_dgTogglePanel" oncommand="GuideDog.togglePanel();"/>
+	<command id="cmd_dgTogglePanel" oncommand="GuideDog.togglePanel(false);"/>
 
 	<vbox id="appcontent">
 		<splitter id="gdContentSplitter" collapsed="true">
@@ -12,7 +12,10 @@
 		<vbox id="gdContentBox" collapsed="true">
 			<toolbox id="gdToolbox">
 		  		<toolbar id="gdToolbar">
-		  			<toolbarbutton id="gdCloseButton" label="Close" command="cmd_dgTogglePanel"/>
+		  			<toolbarbutton id="gdStartButton" label="Start" style="border: thin dotted #00FF00;" />
+		  			<toolbarbutton id="gdStartButton" label="Stop" disabled="true" />
+		  			<toolbarbutton id="gdAboutButton" label="About" />
+		  			<toolbarbutton id="gdCloseButton" label="Close" command="cmd_dgTogglePanel" />
 		  		</toolbar>
 	  		</toolbox>
 	  		
