@@ -20,6 +20,11 @@ var GuideDog = {
 		this.showPanel(!toggleOff);
 	},
 	
+	openAboutUrl: function () {
+		var new_win = window.openDialog("chrome://guidedog/content/about.xul", "httpguidedog-about-dialog", "centerscreen,chrome,modal");
+		new_win.focus();
+	},
+	
 	showPanel: function (show) {
 		this.appContentBox.setAttribute("collapsed", !show);
 		this.appContentSplitter.setAttribute("collapsed", !show);
