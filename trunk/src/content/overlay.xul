@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://guidedog/content/guidedog.css"?>
+<overlay id="guidedog-overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+	<script type="application/x-javascript" src="guidedog.js" />
+	
+	<command id="cmd_dgTogglePanel" oncommand="GuideDog.togglePanel();"/>
+
+	<vbox id="appcontent">
+		<splitter id="gdContentSplitter" collapsed="true">
+    		<grippy/>
+  		</splitter>
+		<vbox id="gdContentBox" collapsed="true">
+			<toolbox id="gdToolbox">
+		  		<toolbar id="gdToolbar">
+		  			<toolbarbutton id="gdCloseButton" label="Close" command="cmd_dgTogglePanel"/>
+		  		</toolbar>
+	  		</toolbox>
+	  		
+	  		<tree id="httpTree" flex="1" style="height: 200px;" hidecolumnpicker="false" seltype="seltype">
+				<treecols>
+					<treecol id="startCol" label="Started" flex="2" persist="width"/>
+					<splitter class="tree-splitter"/>
+					<treecol id="timeCol" label="Time" flex="1" persist="width"/>
+					<splitter class="tree-splitter"/>
+					<treecol id="sizeCol" label="Size" flex="1" persist="width"/>
+					<splitter class="tree-splitter"/>
+					<treecol id="OpCol" label="Op." flex="1" persist="width"/>
+					<splitter class="tree-splitter"/>
+					<treecol id="resultCol" label="Result" flex="1" persist="width"/>
+					<splitter class="tree-splitter"/>
+					<treecol id="typeCol" label="Type" flex="1" persist="width"/>
+					<splitter class="tree-splitter"/>
+					<treecol id="urlCol" label="URL" flex="1" persist="width"/>
+				</treecols>
+				<treechildren />
+			</tree>
+			<!-- TODO: need a grippy in the future -->
+			<splitter />
+			<tabbox flex="1" id="gdTabBox">
+				<tabs>
+					<tab label="Summary"/>
+					<tab label="Cache"/>
+					<tab label="Headers"/>
+					<tab label="Query String"/>
+					<tab label="POST Data"/>
+					<tab label="Content"/>
+				</tabs>
+				<tabpanels>
+					<tabpanel id="summarytab" flex="1">
+						<tree id="summaryTree" flex="1" hidecolumnpicker="false" seltype="seltype">
+							<treecols>
+								<treecol id="startCol" label="Action" flex="2" persist="width" />
+								<splitter class="tree-splitter"/>
+								<treecol id="timeCol" label="Description" flex="1" persist="width" />
+								<splitter class="tree-splitter"/>
+								<treecol id="sizeCol" label="Status" flex="1" persist="width" />
+							</treecols>
+							<treechildren/>
+						</tree>
+					</tabpanel>
+					<tabpanel id="cachetab">
+						<tree id="cacheTree" flex="1" hidecolumnpicker="false" seltype="seltype" style="height: 200px;">
+							<treecols>
+								<treecol id="startCol" label="Cache Info" flex="2" persist="width"/>
+								<splitter class="tree-splitter"/>
+								<treecol id="timeCol" label="Before Request" flex="1" persist="width"/>
+								<splitter class="tree-splitter"/>
+								<treecol id="sizeCol" label="After Request" flex="1" persist="width" />
+							</treecols>
+							<treechildren/>
+						</tree>
+					</tabpanel>
+					<tabpanel id="headerstab">
+						<tree id="headersTree" flex="1" hidecolumnpicker="false" seltype="seltype" style="height: 200px;">
+							<treecols>
+								<treecol id="startCol" label="Header Name" flex="2" persist="width"/>
+								<splitter class="tree-splitter"/>
+								<treecol id="timeCol" label="Value" flex="1" persist="width"/>
+							</treecols>
+							<treechildren/>
+						</tree>
+					</tabpanel>
+					<tabpanel id="querytab">
+						<tree id="queryTree" flex="1" hidecolumnpicker="false" seltype="seltype" style="height: 200px;">
+							<treecols>
+								<treecol id="startCol" label="Parameter" flex="2" persist="width"/>
+								<splitter class="tree-splitter"/>
+								<treecol id="timeCol" label="Value" flex="1" persist="width"/>
+							</treecols>
+							<treechildren/>
+						</tree>
+					</tabpanel>
+					<tabpanel id="posttab" flex="1">
+						<tree id="postTree" flex="1" hidecolumnpicker="false" seltype="seltype" style="height: 200px;">
+							<treecols>
+								<treecol id="startCol" label="Parameter" flex="2" persist="width"/>
+								<splitter class="tree-splitter"/>
+								<treecol id="timeCol" label="Value" flex="1" persist="width"/>
+							</treecols>
+							<treechildren/>
+						</tree>
+					</tabpanel>
+					<tabpanel id="contenttab" readonly="true">
+						<textbox multiline="true" value="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean massa nulla, nonummy quis, accumsan at, aliquet nec, sem. Nam non pede. Ut gravida. Vestibulum auctor massa vel nulla. Sed sed velit. Duis dolor. Nunc venenatis, nibh et pulvinar laoreet, nulla leo varius risus, nec eleifend enim arcu eget ipsum. Fusce posuere vulputate ligula. Sed augue nibh, eleifend eget, rutrum vitae, congue ac, massa. Donec pulvinar venenatis mauris. Donec hendrerit viverra leo. Vivamus lorem."/>
+					</tabpanel>
+				</tabpanels>
+			</tabbox>
+		</vbox>
+	</vbox>
+	
+	<statusbar id="status-bar">
+		<statusbarpanel class="statusbarpanel-iconic" id="guidedog_sbi" onclick="GuideDog.togglePanel();" src="chrome://guidedog/content/images/statusbar_icon.png" />
+	</statusbar>
+</overlay>

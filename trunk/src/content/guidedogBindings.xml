@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<bindings xmlns="http://www.mozilla.org/xbl"
+    xmlns:xbl="http://www.mozilla.org/xbl"
+    xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+	<binding id="content">
+	    <implementation>
+	        <constructor><![CDATA[
+	           GuideDog.initialize(); 
+	        ]]></constructor>
+	
+	        <!--destructor><![CDATA[
+	           FireBug.shutdown(); 
+	        ]]></destructor-->
+	    </implementation>
+	</binding>
+
+</bindings>
