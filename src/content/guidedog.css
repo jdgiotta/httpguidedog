@@ -1,0 +1,4 @@
+#gdContentBox {
+    -moz-binding: url("chrome://guidedog/content/guidedogBindings.xml#content");
+    height: 250px;
+}
