@@ -5,7 +5,7 @@
 	  
 		<em:id>guidedog@jdgiotta.googlepages.com</em:id>
 		<em:name>HTTPGuideDog</em:name>
-		<em:version>0.1.10</em:version>
+		<em:version>0.2</em:version>
 		<em:description>Like the popular IE tool HTTPWatch. GuideDog brings all the http request information under one easy to read viewer</em:description>
 		<em:creator>John D Giotta</em:creator>
 		<!-- optional items -->

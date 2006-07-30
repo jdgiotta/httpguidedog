@@ -2,8 +2,6 @@
 <?xml-stylesheet href="chrome://guidedog/content/guidedog.css"?>
 <overlay id="guidedog-overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 	<script type="application/x-javascript" src="guidedog.js" />
-	
-	
 
 	<vbox id="appcontent">
 		<splitter id="gdContentSplitter" collapsed="true">
@@ -13,16 +11,32 @@
 			<toolbox id="gdToolbox">
 				<command id="cmd_dgTogglePanel" oncommand="GuideDog.togglePanel(false);"/>
 				<command id="cmd_dgOpenAbout" oncommand="GuideDog.openAboutUrl();" />
+				<command id="cmd_dgClearData" oncommand="GuideDog.clearHttpTree();" />
 		  		<toolbar id="gdToolbar">
 		  			<toolbarbutton id="gdStartButton" label="Start" />
 		  			<toolbarbutton id="gdStopButton" label="Stop" disabled="true" />
-		  			<toolbarbutton id="gdClearButton" label="Clear" disabled="true" />
+		  			<toolbarbutton id="gdClearButton" label="Clear" command="cmd_dgClearData" />
 		  			<toolbarbutton id="gdAboutButton" label="About" command="cmd_dgOpenAbout" />
 		  			<toolbarbutton id="gdCloseButton" label="Close" command="cmd_dgTogglePanel" />
 		  		</toolbar>
 	  		</toolbox>
 	  		
-	  		<tree id="httpTree" flex="1" style="height: 100px;" hidecolumnpicker="false" seltype="seltype">
+	  		<popupset>
+	  			<commandset>
+		  			<command id="cmd_httpTreeItemMenuCellCopy" oncommand="GuideDog.httpTreeCopyRowCellToClipBoard()" />
+		  			<command id="cmd_httpTreeItemMenuRowCopy" oncommand="GuideDog.httpTreeCopyRowToClipBoard()" />
+		  			<command id="cmd_httpTreeItemMenuAllRowCopy" oncommand="GuideDog.httpTreeCopyAllRowsToClipBoard()" />
+		  		</commandset>
+		  		
+	  			<popup id="httpTreeItemMenu" onpopupshowing="GuideDog.updateHTTPTreeOverCell(event)">
+	  				<menuitem label="Copy Cell" disabled="true" command="cmd_httpTreeItemMenuCellCopy" />
+	  				<menuitem label="Copy Row" command="cmd_httpTreeItemMenuRowCopy"/>
+	  				<menuitem label="Copy Selected Rows" command="cmd_httpTreeItemMenuAllRowCopy" />
+	  			</popup>
+	  		</popupset>
+	  		
+	  		<tree context="httpTreeItemMenu" id="httpTree" flex="1" style="height: 100px;" hidecolumnpicker="false" seltype="seltype">
+	  			
 				<treecols>
 					<treecol id="startCol" label="Started" flex="2" persist="width"/>
 					<splitter class="tree-splitter"/>
@@ -38,10 +52,10 @@
 					<splitter class="tree-splitter"/>
 					<treecol id="urlCol" label="URL" flex="1" persist="width"/>
 				</treecols>
-				<treechildren>
+				<treechildren id="httpTreeChildren">
 					<treeitem>
 						<treerow>
-							<treecell label="12:57:35.125"/>
+							<treecell label="12:57:35.125" />
 							<treecell label="0.079"/>
 							<treecell label="3981"/>
 							<treecell label="GET"/>
