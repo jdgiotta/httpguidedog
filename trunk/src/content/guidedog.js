@@ -3,6 +3,8 @@ var GuideDog = {
 	initialize: function () {		
 		this.httpTreeOverCell = null;
 		
+		this.atoms = new Array();
+		
 		this.appContentSplitter = document.getElementById("gdContentSplitter");
 		
 		this.httpTree = document.getElementById("httpTree");
@@ -15,6 +17,27 @@ var GuideDog = {
 		
 		GuideDog.initialized = true;
 	},
+	startCollectingData: function (button) {
+		var startButton = document.getElementById("gdStartButton");
+		startButton.setAttribute("disabled", true);
+		
+		var stopButton = document.getElementById("gdStopButton");
+		stopButton.setAttribute("disabled", false);
+		
+		var atomService = Components.classes["@mozilla.org/atom-service;1"].
+				createInstance(Components.interfaces.nsIAtomService);
+			
+		this.atoms[401] = atomService.getAtom("URL");
+		
+		setInterval(trace, 1000, this.atoms[401]);
+	},
+	stopCollectingData: function () {
+		var startButton = document.getElementById("gdStartButton");
+		startButton.setAttribute("disabled", false);
+		
+		var stopButton = document.getElementById("gdStopButton");
+		stopButton.setAttribute("disabled", true);
+	},
 	togglePanel: function (show) {
 		var toggleOff = show == undefined ? !this.appContentBox.collapsed : !show;
 		
@@ -25,6 +48,8 @@ var GuideDog = {
 		new_win.focus();
 	},
 	showPanel: function (show) {
+		
+		if (!show) this.stopCollectingData();
 		this.appContentBox.setAttribute("collapsed", !show);
 		this.appContentSplitter.setAttribute("collapsed", !show);
 	},

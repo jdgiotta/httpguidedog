@@ -9,12 +9,14 @@
   		</splitter>
 		<vbox id="gdContentBox" collapsed="true">
 			<toolbox id="gdToolbox">
+				<command id="cmd_dgStartCollecting" oncommand="GuideDog.startCollectingData(this);" />
+				<command id="cmd_dgStopCollecting" oncommand="GuideDog.stopCollectingData();" />
 				<command id="cmd_dgTogglePanel" oncommand="GuideDog.togglePanel(false);"/>
 				<command id="cmd_dgOpenAbout" oncommand="GuideDog.openAboutUrl();" />
 				<command id="cmd_dgClearData" oncommand="GuideDog.clearHttpTree();" />
 		  		<toolbar id="gdToolbar">
-		  			<toolbarbutton id="gdStartButton" label="Start" />
-		  			<toolbarbutton id="gdStopButton" label="Stop" disabled="true" />
+		  			<toolbarbutton id="gdStartButton" label="Start" command="cmd_dgStartCollecting" />
+		  			<toolbarbutton id="gdStopButton" label="Stop" disabled="true" command="cmd_dgStopCollecting" />
 		  			<toolbarbutton id="gdClearButton" label="Clear" command="cmd_dgClearData" />
 		  			<toolbarbutton id="gdAboutButton" label="About" command="cmd_dgOpenAbout" />
 		  			<toolbarbutton id="gdCloseButton" label="Close" command="cmd_dgTogglePanel" />
