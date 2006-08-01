@@ -6,4 +6,4 @@ locale	guidedog	en-US	jar:chrome/guidedog!/locale/en-US/
 
 skin	guidedog	classic/1.0	jar:chrome/guidedog.jar!/skin/
 
-style	chrome://global/content/customizeToolbar.xul	chrome://guidedog/skin/overlay.css
+style	chrome://global/content/customizeToolbar.xul	chrome://guidedog/skin/guidedog.css

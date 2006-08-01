@@ -3,7 +3,7 @@ var GuideDog = {
 	initialize: function () {		
 		this.httpTreeOverCell = null;
 		
-		this.atoms = new Array();
+		this.observerService = Components.classes["@mozilla.org/observer-service;1"].getService(Components.interfaces.nsIObserverService);
 		
 		this.appContentSplitter = document.getElementById("gdContentSplitter");
 		
@@ -17,26 +17,50 @@ var GuideDog = {
 		
 		GuideDog.initialized = true;
 	},
+	observe: function (subject, topic, data) {
+		switch (topic) {
+			case "http-on-modify-request":
+				subject.QueryInterface(Components.interfaces.nsIHttpChannel);
+				
+				var now = new Date();
+				var start_str = now.getHours().toString()
+							+ ":"
+							+ ((now.getMinutes().toString().length < 2) ? "0" + now.getMinutes().toString() : now.getMinutes().toString())
+							+ ":"
+							+ now.getSeconds().toString()
+							+ "."
+							+ now.getMilliseconds().toString();
+				var url_str = subject.URI.spec;
+				this.addRowToHttpTree(start_str,/* null, null, null, null, null,*/ url_str);
+				break;
+		}
+			
+		//trace("Topic sent: " + topic);
+		//trace("Subject = " + subject);
+	},
+	
 	startCollectingData: function (button) {
+		//trace("HTTPGuideDog Start Collecting");
+		
 		var startButton = document.getElementById("gdStartButton");
 		startButton.setAttribute("disabled", true);
 		
 		var stopButton = document.getElementById("gdStopButton");
 		stopButton.setAttribute("disabled", false);
 		
-		var atomService = Components.classes["@mozilla.org/atom-service;1"].
-				createInstance(Components.interfaces.nsIAtomService);
-			
-		this.atoms[401] = atomService.getAtom("URL");
-		
-		setInterval(trace, 1000, this.atoms[401]);
+		/***********************/
+		this.observerService.addObserver(this, "http-on-modify-request", false);
 	},
 	stopCollectingData: function () {
+		//trace("HTTPGuideDog Stop Collecting");
+		
 		var startButton = document.getElementById("gdStartButton");
 		startButton.setAttribute("disabled", false);
 		
 		var stopButton = document.getElementById("gdStopButton");
 		stopButton.setAttribute("disabled", true);
+		
+		this.observerService.removeObserver(this, "http-on-modify-request");
 	},
 	togglePanel: function (show) {
 		var toggleOff = show == undefined ? !this.appContentBox.collapsed : !show;
@@ -56,8 +80,21 @@ var GuideDog = {
 	httpTreeCopyRowCellToClipBoard: function () {
 		if (this.httpTreeOverCell != null) this.addDataToClipBoard(this.httpTreeOverCell);
 	},
-	addRowToHttpTree: function () {
+	addRowToHttpTree: function (initTime,/* lapse, size, operation, result, type,*/ url) {
 		//TODO: add row code
+		var httpTreeChildren = document.getElementById("httpTreeChildren");
+		var new_item = document.createElement("treeitem");
+		var new_row = document.createElement("treerow");
+		var new_cell = null;
+		for (var i=0; i<arguments.length; i++) {
+			new_cell = document.createElement("treecell");
+			new_cell.setAttribute("label", arguments[i]);
+			new_row.appendChild(new_cell);
+		}
+		
+		
+		new_item.appendChild(new_row);
+		httpTreeChildren.appendChild(new_item);
 	},
 	clearHttpTree: function () {
 		var treeChildren = document.getElementById("httpTreeChildren");

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<?xml-stylesheet href="chrome://guidedog/content/guidedog.css"?>
+<?xml-stylesheet href="chrome://guidedog/skin/guidedog.css"?>
 <overlay id="guidedog-overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-	<script type="application/x-javascript" src="guidedog.js" />
+	<script type="application/x-javascript" src="chrome://guidedog/content/js/guidedog.js" />
 
 	<vbox id="appcontent">
 		<splitter id="gdContentSplitter" collapsed="true">
@@ -42,7 +42,7 @@
 				<treecols>
 					<treecol id="startCol" label="Started" flex="2" persist="width"/>
 					<splitter class="tree-splitter"/>
-					<treecol id="timeCol" label="Time" flex="1" persist="width"/>
+					<!-- treecol id="timeCol" label="Time" flex="1" persist="width"/>
 					<splitter class="tree-splitter"/>
 					<treecol id="sizeCol" label="Size" flex="1" persist="width"/>
 					<splitter class="tree-splitter"/>
@@ -51,44 +51,10 @@
 					<treecol id="resultCol" label="Result" flex="1" persist="width"/>
 					<splitter class="tree-splitter"/>
 					<treecol id="typeCol" label="Type" flex="1" persist="width"/>
-					<splitter class="tree-splitter"/>
+					<splitter class="tree-splitter"/ -->
 					<treecol id="urlCol" label="URL" flex="1" persist="width"/>
 				</treecols>
-				<treechildren id="httpTreeChildren">
-					<treeitem>
-						<treerow>
-							<treecell label="12:57:35.125" />
-							<treecell label="0.079"/>
-							<treecell label="3981"/>
-							<treecell label="GET"/>
-							<treecell label="200"/>
-							<treecell label="text/html; charset=UTF-8"/>
-							<treecell label="http://www.google.com/"/>
-						</treerow>
-					</treeitem>
-					<treeitem>
-						<treerow>
-							<treecell label="12:57:35.219"/>
-							<treecell label="0.078"/>
-							<treecell label="2048"/>
-							<treecell label="GET"/>
-							<treecell label="200"/>
-							<treecell label="image/gif"/>
-							<treecell label="http://www.google.com/intl/en/images/logo.gif"/>
-						</treerow>
-					</treeitem>
-					<treeitem>
-						<treerow>
-							<treecell label="12:57:35.266"/>
-							<treecell label="0.094"/>
-							<treecell label="2048"/>
-							<treecell label="GET"/>
-							<treecell label="200"/>
-							<treecell label="image/png"/>
-							<treecell label="http://www.google.com/intl/en/images/cart30.png"/>
-						</treerow>
-					</treeitem>
-				</treechildren>
+				<treechildren id="httpTreeChildren"/>
 			</tree>
 			<!--splitter collapse="after" />
 			<tabbox flex="1" id="gdTabBox" align="stretch" style="height: 100px;">
