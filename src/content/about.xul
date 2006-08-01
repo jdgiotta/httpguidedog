@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://guidedog/skin/about.css" type="text/css"?>
 <dialog buttons="accept" id="httpguidedog-about-dialog" title="HTTPGuideDog" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-	<script type="application/x-javascript" src="chrome://guidedog/content/about.js"/>
+	<script type="application/x-javascript" src="chrome://guidedog/content/js/about.js"/>
     <vbox id="httpguidedog-about-details">
         <hbox>
             <vbox>
                 <hbox>
                     <description class="name">HTTPGuideDog</description>
-                    <description class="name">0.2</description>
+                    <description class="name">0.2.2</description>
                 </hbox>
                 <description value="Author" class="title"/>
                 <description>John D Giotta</description>
