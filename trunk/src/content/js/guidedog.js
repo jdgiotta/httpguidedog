@@ -3,6 +3,8 @@ var GuideDog = {
 	initialize: function () {		
 		this.httpTreeOverCell = null;
 		
+		this.isCollecting = false;
+		
 		this.observerService = Components.classes["@mozilla.org/observer-service;1"].getService(Components.interfaces.nsIObserverService);
 		
 		this.appContentSplitter = document.getElementById("gdContentSplitter");
@@ -50,6 +52,8 @@ var GuideDog = {
 		
 		/***********************/
 		this.observerService.addObserver(this, "http-on-modify-request", false);
+		
+		this.isCollecting = true;
 	},
 	stopCollectingData: function () {
 		//trace("HTTPGuideDog Stop Collecting");
@@ -61,6 +65,8 @@ var GuideDog = {
 		stopButton.setAttribute("disabled", true);
 		
 		this.observerService.removeObserver(this, "http-on-modify-request");
+		
+		this.isCollecting = false;
 	},
 	togglePanel: function (show) {
 		var toggleOff = show == undefined ? !this.appContentBox.collapsed : !show;
@@ -73,7 +79,9 @@ var GuideDog = {
 	},
 	showPanel: function (show) {
 		
-		if (!show) this.stopCollectingData();
+		if (this.isCollecting) {
+			if (!show) this.stopCollectingData();
+		}
 		this.appContentBox.setAttribute("collapsed", !show);
 		this.appContentSplitter.setAttribute("collapsed", !show);
 	},

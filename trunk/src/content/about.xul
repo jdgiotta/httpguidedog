@@ -7,7 +7,7 @@
             <vbox>
                 <hbox>
                     <description class="name">HTTPGuideDog</description>
-                    <description class="name">0.2.2</description>
+                    <description class="name">0.2.3</description>
                 </hbox>
                 <description value="Author" class="title"/>
                 <description>John D Giotta</description>
