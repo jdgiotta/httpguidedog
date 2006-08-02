@@ -22,6 +22,8 @@ var GuideDog = {
 	observe: function (subject, topic, data) {
 		switch (topic) {
 			case "http-on-modify-request":
+				var id = new String(Math.random());
+				id = id.substring (2,11);
 				subject.QueryInterface(Components.interfaces.nsIHttpChannel);
 				
 				var now = new Date();
@@ -33,22 +35,28 @@ var GuideDog = {
 							+ "."
 							+ now.getMilliseconds().toString();
 				var url_str = subject.URI.spec;
-				this.addRowToHttpTree(start_str, url_str);
+				var operation_str = subject.requestMethod;
+				this.addRowToHttpTree(id, start_str, operation_str, url_str);
+				
 				break;
 			case "http-on-examine-response":
+				subject.QueryInterface(Components.interfaces.nsIHttpChannel);
 				var url_str = subject.URI.spec;
-				var request_method = subject.requestMethod;
-				trace(request_method);
-				this.updateToHttpTree(subject.requestMethod, url_str);
+				var response_stat = subject.responseStatus;
+				var mime_type = subject.getResponseHeader("Content-Type");
+				var size = subject.getResponseHeader("Content-Length");
+				
+				this.updateToHttpTree(response_stat, size, mime_type, url_str);
+				
+				break;
+			default:
+				trace("unknown topic: " + topic);
 				break;
 		}
-			
-		//trace("Topic sent: " + topic);
-		//trace("Subject = " + subject);
 	},
 	
 	startCollectingData: function (button) {
-		//trace("HTTPGuideDog Start Collecting");
+		trace("HTTPGuideDog Start Collecting");
 		
 		var startButton = document.getElementById("gdStartButton");
 		startButton.setAttribute("disabled", true);
@@ -95,24 +103,44 @@ var GuideDog = {
 	httpTreeCopyRowCellToClipBoard: function () {
 		if (this.httpTreeOverCell != null) this.addDataToClipBoard(this.httpTreeOverCell);
 	},
-	addRowToHttpTree: function (initTime, url) {
+	addRowToHttpTree: function (id, initTime, operation, url) {
 		//TODO: add row code
 		var httpTreeChildren = document.getElementById("httpTreeChildren");
 		var new_item = document.createElement("treeitem");
 		var new_row = document.createElement("treerow");
 		new_row.id = url;
 		
-		// Start Column
+		// Start Column 0
 		var new_cell_initTime = document.createElement("treecell");
 		new_cell_initTime.setAttribute("label", initTime);
 		new_row.appendChild(new_cell_initTime);
 		
-		// Operation Column
+		// Duration Column 1
+		var new_cell_duration = document.createElement("treecell");
+		new_cell_duration.setAttribute("label", "*");
+		new_row.appendChild(new_cell_duration);
+		
+		// Size Column 2
+		var new_cell_size = document.createElement("treecell");
+		new_cell_size.setAttribute("label", "*");
+		new_row.appendChild(new_cell_size);
+		
+		// Operation Column 3
 		var new_cell_op = document.createElement("treecell");
-		new_cell_op.setAttribute("label", "OP");
+		new_cell_op.setAttribute("label", operation);
 		new_row.appendChild(new_cell_op);
 		
-		// URL Column
+		// Result Column 4
+		var new_cell_result = document.createElement("treecell");
+		new_cell_result.setAttribute("label", "*");
+		new_row.appendChild(new_cell_result);
+		
+		// Type Column 5
+		var new_cell_type = document.createElement("treecell");
+		new_cell_type.setAttribute("label", "*");
+		new_row.appendChild(new_cell_type);
+		
+		// URL Column 6
 		var new_cell_url = document.createElement("treecell");
 		new_cell_url.setAttribute("label", url);
 		new_row.appendChild(new_cell_url);
@@ -120,12 +148,25 @@ var GuideDog = {
 		new_item.appendChild(new_row);
 		httpTreeChildren.appendChild(new_item);
 	},
-	updateToHttpTree: function (operation, url) {
+	updateToHttpTree: function (response_stat, content_size, type, url) {
 		var row_to_update = document.getElementById(url);
-		var new_cell_op = document.createElement("treecell");
-		new_cell_op.setAttribute("label", operation);
-		row_to_update.replaceChild(new_cell_op, row_to_update.firstChild.nextSibling);
 		
+		// Size Column 2
+		var new_cell_size = document.createElement("treecell");
+		new_cell_size.setAttribute("label", content_size);
+		row_to_update.replaceChild(new_cell_size, row_to_update.childNodes[2]);
+		
+		// Result Column 4
+		var new_cell_stat = document.createElement("treecell");
+		new_cell_stat.setAttribute("label", response_stat);
+		row_to_update.replaceChild(new_cell_stat, row_to_update.childNodes[4]);
+		
+		// Type Column 5
+		var new_cell_type = document.createElement("treecell");
+		new_cell_type.setAttribute("label", type);
+		row_to_update.replaceChild(new_cell_type, row_to_update.childNodes[5]);
+		
+		row_to_update.id = "locked";
 	},
 	clearHttpTree: function () {
 		var treeChildren = document.getElementById("httpTreeChildren");
