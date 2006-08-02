@@ -33,7 +33,13 @@ var GuideDog = {
 							+ "."
 							+ now.getMilliseconds().toString();
 				var url_str = subject.URI.spec;
-				this.addRowToHttpTree(start_str,/* null, null, null, null, null,*/ url_str);
+				this.addRowToHttpTree(start_str, url_str);
+				break;
+			case "http-on-examine-response":
+				var url_str = subject.URI.spec;
+				var request_method = subject.requestMethod;
+				trace(request_method);
+				this.updateToHttpTree(subject.requestMethod, url_str);
 				break;
 		}
 			
@@ -52,6 +58,7 @@ var GuideDog = {
 		
 		/***********************/
 		this.observerService.addObserver(this, "http-on-modify-request", false);
+		this.observerService.addObserver(this, "http-on-examine-response", false);
 		
 		this.isCollecting = true;
 	},
@@ -88,21 +95,37 @@ var GuideDog = {
 	httpTreeCopyRowCellToClipBoard: function () {
 		if (this.httpTreeOverCell != null) this.addDataToClipBoard(this.httpTreeOverCell);
 	},
-	addRowToHttpTree: function (initTime,/* lapse, size, operation, result, type,*/ url) {
+	addRowToHttpTree: function (initTime, url) {
 		//TODO: add row code
 		var httpTreeChildren = document.getElementById("httpTreeChildren");
 		var new_item = document.createElement("treeitem");
 		var new_row = document.createElement("treerow");
-		var new_cell = null;
-		for (var i=0; i<arguments.length; i++) {
-			new_cell = document.createElement("treecell");
-			new_cell.setAttribute("label", arguments[i]);
-			new_row.appendChild(new_cell);
-		}
+		new_row.id = url;
 		
+		// Start Column
+		var new_cell_initTime = document.createElement("treecell");
+		new_cell_initTime.setAttribute("label", initTime);
+		new_row.appendChild(new_cell_initTime);
+		
+		// Operation Column
+		var new_cell_op = document.createElement("treecell");
+		new_cell_op.setAttribute("label", "OP");
+		new_row.appendChild(new_cell_op);
+		
+		// URL Column
+		var new_cell_url = document.createElement("treecell");
+		new_cell_url.setAttribute("label", url);
+		new_row.appendChild(new_cell_url);
 		
 		new_item.appendChild(new_row);
 		httpTreeChildren.appendChild(new_item);
+	},
+	updateToHttpTree: function (operation, url) {
+		var row_to_update = document.getElementById(url);
+		var new_cell_op = document.createElement("treecell");
+		new_cell_op.setAttribute("label", operation);
+		row_to_update.replaceChild(new_cell_op, row_to_update.firstChild.nextSibling);
+		
 	},
 	clearHttpTree: function () {
 		var treeChildren = document.getElementById("httpTreeChildren");
