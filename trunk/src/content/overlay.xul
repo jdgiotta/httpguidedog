@@ -42,16 +42,16 @@
 				<treecols>
 					<treecol id="startCol" label="Started" flex="2" persist="width"/>
 					<splitter class="tree-splitter"/>
-					<!-- treecol id="timeCol" label="Time" flex="1" persist="width"/>
+					<treecol id="timeCol" label="Time" flex="1" persist="width"/>
 					<splitter class="tree-splitter"/>
 					<treecol id="sizeCol" label="Size" flex="1" persist="width"/>
-					<splitter class="tree-splitter"/-->
+					<splitter class="tree-splitter"/>
 					<treecol id="OpCol" label="Op." flex="1" persist="width"/>
 					<splitter class="tree-splitter"/>
-					<!-- treecol id="resultCol" label="Result" flex="1" persist="width"/>
+					<treecol id="resultCol" label="Result" flex="1" persist="width"/>
 					<splitter class="tree-splitter"/>
 					<treecol id="typeCol" label="Type" flex="1" persist="width"/>
-					<splitter class="tree-splitter"/ -->
+					<splitter class="tree-splitter"/>
 					<treecol id="urlCol" label="URL" flex="1" persist="width"/>
 				</treecols>
 				<treechildren id="httpTreeChildren"/>
