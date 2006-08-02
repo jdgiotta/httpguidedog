@@ -45,10 +45,10 @@
 					<!-- treecol id="timeCol" label="Time" flex="1" persist="width"/>
 					<splitter class="tree-splitter"/>
 					<treecol id="sizeCol" label="Size" flex="1" persist="width"/>
-					<splitter class="tree-splitter"/>
+					<splitter class="tree-splitter"/-->
 					<treecol id="OpCol" label="Op." flex="1" persist="width"/>
 					<splitter class="tree-splitter"/>
-					<treecol id="resultCol" label="Result" flex="1" persist="width"/>
+					<!-- treecol id="resultCol" label="Result" flex="1" persist="width"/>
 					<splitter class="tree-splitter"/>
 					<treecol id="typeCol" label="Type" flex="1" persist="width"/>
 					<splitter class="tree-splitter"/ -->
