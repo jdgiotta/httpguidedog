@@ -25,13 +25,15 @@
 	  		
 	  		<popupset>
 	  			<commandset>
+	  				<command id="cmd_httpTreeItemMenuOpenInTab" oncommand="GuideDog.httpTreeOpenCellURLToTab()" />
 		  			<command id="cmd_httpTreeItemMenuCellCopy" oncommand="GuideDog.httpTreeCopyRowCellToClipBoard()" />
 		  			<command id="cmd_httpTreeItemMenuRowCopy" oncommand="GuideDog.httpTreeCopyRowToClipBoard()" />
 		  			<command id="cmd_httpTreeItemMenuAllRowCopy" oncommand="GuideDog.httpTreeCopyAllRowsToClipBoard()" />
 		  		</commandset>
 		  		
 	  			<popup id="httpTreeItemMenu" onpopupshowing="GuideDog.updateHTTPTreeOverCell(event)">
-	  				<menuitem label="Copy Cell" disabled="true" command="cmd_httpTreeItemMenuCellCopy" />
+	  				<menuitem label="Open in New Tab" hidden="true" disabled="true" command="cmd_httpTreeItemMenuOpenInTab" />
+	  				<menuitem label="Copy Cell" hidden="true" disabled="true" command="cmd_httpTreeItemMenuCellCopy" />
 	  				<menuitem label="Copy Row" command="cmd_httpTreeItemMenuRowCopy"/>
 	  				<menuitem label="Copy Selected Rows" command="cmd_httpTreeItemMenuAllRowCopy" />
 	  			</popup>
