@@ -17,6 +17,8 @@ var GuideDog = {
 		this.appContentBox.collapsed = true;
 		this.appContentBoxCollapsed = true;
 		
+		this.treerows = new Array();
+		
 		GuideDog.initialized = true;
 	},
 	observe: function (subject, topic, data) {
@@ -27,16 +29,9 @@ var GuideDog = {
 				subject.QueryInterface(Components.interfaces.nsIHttpChannel);
 				
 				var now = new Date();
-				var start_str = now.getHours().toString()
-							+ ":"
-							+ ((now.getMinutes().toString().length < 2) ? "0" + now.getMinutes().toString() : now.getMinutes().toString())
-							+ ":"
-							+ now.getSeconds().toString()
-							+ "."
-							+ now.getMilliseconds().toString();
 				var url_str = subject.URI.spec;
 				var operation_str = subject.requestMethod;
-				this.addRowToHttpTree(id, start_str, operation_str, url_str);
+				this.addRowToHttpTree(id, now, operation_str, url_str);
 				
 				break;
 			case "http-on-examine-response":
@@ -71,7 +66,7 @@ var GuideDog = {
 		this.isCollecting = true;
 	},
 	stopCollectingData: function () {
-		//trace("HTTPGuideDog Stop Collecting");
+		trace("HTTPGuideDog Stop Collecting");
 		
 		var startButton = document.getElementById("gdStartButton");
 		startButton.setAttribute("disabled", false);
@@ -80,6 +75,7 @@ var GuideDog = {
 		stopButton.setAttribute("disabled", true);
 		
 		this.observerService.removeObserver(this, "http-on-modify-request");
+		this.observerService.removeObserver(this, "http-on-examine-response");
 		
 		this.isCollecting = false;
 	},
@@ -104,15 +100,24 @@ var GuideDog = {
 		if (this.httpTreeOverCell != null) this.addDataToClipBoard(this.httpTreeOverCell);
 	},
 	addRowToHttpTree: function (id, initTime, operation, url) {
-		//TODO: add row code
+		var start_str = initTime.getHours().toString()
+							+ ":"
+							+ ((initTime.getMinutes().toString().length < 2) ? "0" + initTime.getMinutes().toString() : initTime.getMinutes().toString())
+							+ ":"
+							+ initTime.getSeconds().toString()
+							+ "."
+							+ initTime.getMilliseconds().toString();
+		
 		var httpTreeChildren = document.getElementById("httpTreeChildren");
 		var new_item = document.createElement("treeitem");
 		var new_row = document.createElement("treerow");
 		new_row.id = url;
 		
+		this.treerows.push({element:new_row, date:initTime});
+		
 		// Start Column 0
 		var new_cell_initTime = document.createElement("treecell");
-		new_cell_initTime.setAttribute("label", initTime);
+		new_cell_initTime.setAttribute("label", start_str);
 		new_row.appendChild(new_cell_initTime);
 		
 		// Duration Column 1
@@ -149,24 +154,43 @@ var GuideDog = {
 		httpTreeChildren.appendChild(new_item);
 	},
 	updateToHttpTree: function (response_stat, content_size, type, url) {
-		var row_to_update = document.getElementById(url);
+		var row_to_update = this.getRowByIdentifyingUrl(url);
+		var now = new Date();
+		var difference_in_milsec = (now.getTime() - row_to_update.date.getTime())/1000;
 		
-		// Size Column 2
-		var new_cell_size = document.createElement("treecell");
-		new_cell_size.setAttribute("label", content_size);
-		row_to_update.replaceChild(new_cell_size, row_to_update.childNodes[2]);
+		if (row_to_update) {
+			// Duration Column 1
+			var new_cell_duration = document.createElement("treecell");
+			new_cell_duration.setAttribute("label", difference_in_milsec);
+			row_to_update.element.replaceChild(new_cell_duration, row_to_update.element.childNodes[1]);
 		
-		// Result Column 4
-		var new_cell_stat = document.createElement("treecell");
-		new_cell_stat.setAttribute("label", response_stat);
-		row_to_update.replaceChild(new_cell_stat, row_to_update.childNodes[4]);
-		
-		// Type Column 5
-		var new_cell_type = document.createElement("treecell");
-		new_cell_type.setAttribute("label", type);
-		row_to_update.replaceChild(new_cell_type, row_to_update.childNodes[5]);
-		
-		row_to_update.id = "locked";
+			// Size Column 2
+			var new_cell_size = document.createElement("treecell");
+			new_cell_size.setAttribute("label", content_size);
+			row_to_update.element.replaceChild(new_cell_size, row_to_update.element.childNodes[2]);
+			
+			// Result Column 4
+			var new_cell_stat = document.createElement("treecell");
+			new_cell_stat.setAttribute("label", response_stat);
+			row_to_update.element.replaceChild(new_cell_stat, row_to_update.element.childNodes[4]);
+			
+			// Type Column 5
+			var new_cell_type = document.createElement("treecell");
+			new_cell_type.setAttribute("label", type);
+			row_to_update.element.replaceChild(new_cell_type, row_to_update.element.childNodes[5]);
+			
+			row_to_update.element.id = "locked";
+		}
+	},
+	getRowByIdentifyingUrl: function (id_url) {
+		var row;
+		for (var i=0; i<this.treerows.length; i++) {
+			row = this.treerows[i];
+			if (row.element.id == id_url) {
+				return row;
+			}
+		}
+		return false;
 	},
 	clearHttpTree: function () {
 		var treeChildren = document.getElementById("httpTreeChildren");
@@ -184,20 +208,41 @@ var GuideDog = {
 		boxobject.getCellAt(event.clientX, event.clientY, row, column, part);
 		
 		if (row.value != -1) {
+			
 			var celltext = tree.view.getCellText(row.value, tree.columns[column.value.index]);
 			this.httpTreeOverCell = celltext;
 			
-			menu.firstChild.setAttribute("command", "cmd_httpTreeItemMenuCellCopy");
-			menu.firstChild.setAttribute("disabled", false);
-			menu.firstChild.setAttribute("label", "Copy Cell '"+ celltext + "'");
+			if (column.value.id == "urlCol") {
+				menu.firstChild.setAttribute("command", "cmd_httpTreeItemMenuOpenInTab");
+				menu.firstChild.setAttribute("hidden" , false);
+				menu.firstChild.setAttribute("disabled", false);
+			} else {
+				menu.firstChild.removeAttribute("command");
+				menu.firstChild.setAttribute("hidden" , true);
+				menu.firstChild.setAttribute("disabled", true);
+			}
+			
+			menu.firstChild.nextSibling.setAttribute("command", "cmd_httpTreeItemMenuCellCopy");
+			menu.firstChild.nextSibling.setAttribute("hidden" , false);
+			menu.firstChild.nextSibling.setAttribute("disabled", false);
+			menu.firstChild.nextSibling.setAttribute("label", "Copy Cell '"+ celltext + "'");
 			
 		} else {
 			this.httpTreeOverCell = null;
+			
 			menu.firstChild.removeAttribute("command");
 			menu.firstChild.setAttribute("disabled", true);
-			menu.firstChild.setAttribute("label", "Copy Cell");
+			
+			menu.firstChild.nextSibling.removeAttribute("command");
+			menu.firstChild.nextSibling.setAttribute("hidden" , true);
+			menu.firstChild.nextSibling.setAttribute("disabled", true);
+			menu.firstChild.nextSibling.setAttribute("label", "Copy Cell");
 		}
 	},
+	httpTreeOpenCellURLToTab: function () {
+		window.getBrowser().addTab(this.httpTreeOverCell, null, null);
+	},
+	
 	httpTreeCopyRowToClipBoard: function () {
 		var tree = this.httpTree;
 		
