@@ -31,15 +31,28 @@ var GuideDog = {
 				var now = new Date();
 				var url_str = subject.URI.spec;
 				var operation_str = subject.requestMethod;
+				
 				this.addRowToHttpTree(id, now, operation_str, url_str);
 				
 				break;
 			case "http-on-examine-response":
 				subject.QueryInterface(Components.interfaces.nsIHttpChannel);
+				
+				var original_uri_str = subject.originalURI.spec;
 				var url_str = subject.URI.spec;
 				var response_stat = subject.responseStatus;
 				var mime_type = subject.getResponseHeader("Content-Type");
-				var size = subject.getResponseHeader("Content-Length");
+				var size = 0;
+				try {
+					size = subject.getResponseHeader("Content-Length");
+				}
+				catch (e) {
+					//trace(e.toString());
+				}
+				
+				if (original_uri_str != url_str) {
+					this.updateToHttpTree("(Redirected)", "*", mime_type, original_uri_str);
+				}
 				
 				this.updateToHttpTree(response_stat, size, mime_type, url_str);
 				
@@ -51,7 +64,6 @@ var GuideDog = {
 	},
 	
 	startCollectingData: function (button) {
-		trace("HTTPGuideDog Start Collecting");
 		
 		var startButton = document.getElementById("gdStartButton");
 		startButton.setAttribute("disabled", true);
@@ -66,7 +78,6 @@ var GuideDog = {
 		this.isCollecting = true;
 	},
 	stopCollectingData: function () {
-		trace("HTTPGuideDog Stop Collecting");
 		
 		var startButton = document.getElementById("gdStartButton");
 		startButton.setAttribute("disabled", false);
@@ -107,6 +118,12 @@ var GuideDog = {
 							+ initTime.getSeconds().toString()
 							+ "."
 							+ initTime.getMilliseconds().toString();
+							
+		var old_row = this.getRowByIdentifyingUrl(url);
+		if (old_row) {
+			this.updateToHttpTree("(Aborted)", "*", "*", url);
+			old_row.element.id = "locked";
+		}
 		
 		var httpTreeChildren = document.getElementById("httpTreeChildren");
 		var new_item = document.createElement("treeitem");
@@ -179,7 +196,7 @@ var GuideDog = {
 			new_cell_type.setAttribute("label", type);
 			row_to_update.element.replaceChild(new_cell_type, row_to_update.element.childNodes[5]);
 			
-			row_to_update.element.id = "locked";
+			//row_to_update.element.id = "locked";
 		}
 	},
 	getRowByIdentifyingUrl: function (id_url) {
