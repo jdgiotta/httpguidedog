@@ -22,24 +22,26 @@ var GuideDog = {
 		GuideDog.initialized = true;
 	},
 	observe: function (subject, topic, data) {
+		try {
+			subject.QueryInterface(Components.interfaces.nsIHttpChannel);
+		}
+		catch (nsHttpChannelException) {}
 		switch (topic) {
-			case "http-on-modify-request":
-				var id = new String(Math.random());
-				id = id.substring (2,11);
-				subject.QueryInterface(Components.interfaces.nsIHttpChannel);
+			case "http-on-modify-request":				
+				var isPending = !subject.isPending();
 				
 				var now = new Date();
-				var url_str = subject.URI.spec;
+				var url_str = subject.URI.asciiSpec;
 				var operation_str = subject.requestMethod;
 				
-				this.addRowToHttpTree(id, now, operation_str, url_str);
+				this.addRowToHttpTree(now, operation_str, url_str, isPending);
 				
 				break;
 			case "http-on-examine-response":
-				subject.QueryInterface(Components.interfaces.nsIHttpChannel);
+				var isPending = !subject.isPending();
 				
-				var original_uri_str = subject.originalURI.spec;
-				var url_str = subject.URI.spec;
+				var original_uri_str = subject.originalURI.asciiSpec;
+				var url_str = subject.URI.asciiSpec;
 				var response_stat = subject.responseStatus;
 				var mime_type = subject.getResponseHeader("Content-Type");
 				var size = 0;
@@ -54,7 +56,7 @@ var GuideDog = {
 					this.updateToHttpTree("(Redirected)", "*", mime_type, original_uri_str);
 				}
 				
-				this.updateToHttpTree(response_stat, size, mime_type, url_str);
+				this.updateToHttpTree(response_stat, size, mime_type, url_str, isPending);
 				
 				break;
 			default:
@@ -110,7 +112,7 @@ var GuideDog = {
 	httpTreeCopyRowCellToClipBoard: function () {
 		if (this.httpTreeOverCell != null) this.addDataToClipBoard(this.httpTreeOverCell);
 	},
-	addRowToHttpTree: function (id, initTime, operation, url) {
+	addRowToHttpTree: function (initTime, operation, url) {
 		var start_str = initTime.getHours().toString()
 							+ ":"
 							+ ((initTime.getMinutes().toString().length < 2) ? "0" + initTime.getMinutes().toString() : initTime.getMinutes().toString())
@@ -122,7 +124,7 @@ var GuideDog = {
 		var old_row = this.getRowByIdentifyingUrl(url);
 		if (old_row) {
 			this.updateToHttpTree("(Aborted)", "*", "*", url);
-			old_row.element.id = "locked";
+			old_row.element.id = "aborted";
 		}
 		
 		var httpTreeChildren = document.getElementById("httpTreeChildren");
@@ -170,7 +172,7 @@ var GuideDog = {
 		new_item.appendChild(new_row);
 		httpTreeChildren.appendChild(new_item);
 	},
-	updateToHttpTree: function (response_stat, content_size, type, url) {
+	updateToHttpTree: function (response_stat, content_size, type, url, pending) {
 		var row_to_update = this.getRowByIdentifyingUrl(url);
 		var now = new Date();
 		var difference_in_milsec = (now.getTime() - row_to_update.date.getTime())/1000;
@@ -196,7 +198,7 @@ var GuideDog = {
 			new_cell_type.setAttribute("label", type);
 			row_to_update.element.replaceChild(new_cell_type, row_to_update.element.childNodes[5]);
 			
-			//row_to_update.element.id = "locked";
+			//if (!pending) row_to_update.element.id = "locked";
 		}
 	},
 	getRowByIdentifyingUrl: function (id_url) {
