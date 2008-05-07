@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://guidedog/skin/guidedog.css"?>
+<overlay id="guidedog-overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+	<script type="application/x-javascript" src="chrome://guidedog/content/js/guidedog.js" />
+
+	<vbox id="appcontent">
+		<splitter id="gdContentSplitter" collapsed="true">
+    		<grippy/>
+  		</splitter>
+		<vbox id="gdContentBox" collapsed="true">
+			<toolbox id="gdToolbox">
+				<command id="cmd_dgStartCollecting" oncommand="GuideDog.startCollectingData(this);" />
+				<command id="cmd_dgStopCollecting" oncommand="GuideDog.stopCollectingData();" />
+				<command id="cmd_dgTogglePanel" oncommand="GuideDog.togglePanel(false);"/>
+				<command id="cmd_dgOpenAbout" oncommand="GuideDog.openAboutUrl();" />
+				<command id="cmd_dgClearData" oncommand="GuideDog.clearHttpTree();" />
+		  		<toolbar id="gdToolbar">
+		  			<toolbarbutton id="gdStartButton" label="Start" command="cmd_dgStartCollecting" />
+		  			<toolbarbutton id="gdStopButton" label="Stop" disabled="true" command="cmd_dgStopCollecting" />
+		  			<toolbarbutton id="gdClearButton" label="Clear" command="cmd_dgClearData" />
+		  			<toolbarbutton id="gdAboutButton" label="About" command="cmd_dgOpenAbout" />
+		  			<toolbarbutton id="gdCloseButton" label="Close" command="cmd_dgTogglePanel" />
+		  		</toolbar>
+	  		</toolbox>
+	  		
+	  		<popupset>
+	  			<commandset>
+	  				<command id="cmd_httpTreeItemMenuOpenInTab" oncommand="GuideDog.httpTreeOpenCellURLToTab()" />
+		  			<command id="cmd_httpTreeItemMenuCellCopy" oncommand="GuideDog.httpTreeCopyRowCellToClipBoard()" />
+		  			<command id="cmd_httpTreeItemMenuRowCopy" oncommand="GuideDog.httpTreeCopyRowToClipBoard()" />
+		  			<command id="cmd_httpTreeItemMenuAllRowCopy" oncommand="GuideDog.httpTreeCopyAllRowsToClipBoard()" />
+		  		</commandset>
+		  		
+	  			<popup id="httpTreeItemMenu" onpopupshowing="GuideDog.updateHTTPTreeOverCell(event)">
+	  				<menuitem label="Open in New Tab" hidden="true" disabled="true" command="cmd_httpTreeItemMenuOpenInTab" />
+	  				<menuitem label="Copy Cell" hidden="true" disabled="true" command="cmd_httpTreeItemMenuCellCopy" />
+	  				<menuitem label="Copy Row" command="cmd_httpTreeItemMenuRowCopy"/>
+	  				<menuitem label="Copy Selected Rows" command="cmd_httpTreeItemMenuAllRowCopy" />
+	  			</popup>
+	  		</popupset>
+	  		
+	  		<tree context="httpTreeItemMenu" id="httpTree" flex="1" style="height: 100px;" hidecolumnpicker="false" seltype="seltype">
+	  			
+				<treecols>
+					<treecol id="startCol" label="Started" flex="2" persist="width"/>
+					<splitter class="tree-splitter"/>
+					<treecol id="timeCol" label="Time" flex="1" persist="width"/>
+					<splitter class="tree-splitter"/>
+					<treecol id="sizeCol" label="Size" flex="1" persist="width"/>
+					<splitter class="tree-splitter"/>
+					<treecol id="OpCol" label="Op." flex="1" persist="width"/>
+					<splitter class="tree-splitter"/>
+					<treecol id="resultCol" label="Result" flex="1" persist="width"/>
+					<splitter class="tree-splitter"/>
+					<treecol id="typeCol" label="Type" flex="1" persist="width"/>
+					<splitter class="tree-splitter"/>
+					<treecol id="urlCol" label="URL" flex="1" persist="width"/>
+				</treecols>
+				<treechildren id="httpTreeChildren"/>
+			</tree>
+			<!--splitter collapse="after" />
+			<tabbox flex="1" id="gdTabBox" align="stretch" style="height: 100px;">
+				<tabs>
+					<tab label="Summary" />
+					<tab label="Cache"/>
+					<tab label="Headers"/>
+					<tab label="Query String"/>
+					<tab label="POST Data"/>
+					<tab label="Content"/>
+				</tabs>
+				<tabpanels flex="1">
+					<tabpanel id="summarytab">
+						<tree id="summaryTree" flex="1" hidecolumnpicker="false" seltype="seltype">
+							<treecols>
+								<treecol id="startCol" label="Action" flex="2" persist="width" />
+								<splitter class="tree-splitter"/>
+								<treecol id="timeCol" label="Description" flex="1" persist="width" />
+								<splitter class="tree-splitter"/>
+								<treecol id="sizeCol" label="Status" flex="1" persist="width" />
+							</treecols>
+							<treechildren/>
+						</tree>
+					</tabpanel>
+					<tabpanel id="cachetab">
+						<tree id="cacheTree" flex="1" hidecolumnpicker="false" seltype="seltype">
+							<treecols>
+								<treecol id="startCol" label="Cache Info" flex="2" persist="width"/>
+								<splitter class="tree-splitter"/>
+								<treecol id="timeCol" label="Before Request" flex="1" persist="width"/>
+								<splitter class="tree-splitter"/>
+								<treecol id="sizeCol" label="After Request" flex="1" persist="width" />
+							</treecols>
+							<treechildren/>
+						</tree>
+					</tabpanel>
+					<tabpanel id="headerstab">
+						<tree id="headersTree" flex="1" hidecolumnpicker="false" seltype="seltype">
+							<treecols>
+								<treecol id="startCol" label="Header Name" flex="2" persist="width"/>
+								<splitter class="tree-splitter"/>
+								<treecol id="timeCol" label="Value" flex="1" persist="width"/>
+							</treecols>
+							<treechildren/>
+						</tree>
+					</tabpanel>
+					<tabpanel id="querytab">
+						<tree id="queryTree" flex="1" hidecolumnpicker="false" seltype="seltype">
+							<treecols>
+								<treecol id="startCol" label="Parameter" flex="2" persist="width"/>
+								<splitter class="tree-splitter"/>
+								<treecol id="timeCol" label="Value" flex="1" persist="width"/>
+							</treecols>
+							<treechildren/>
+						</tree>
+					</tabpanel>
+					<tabpanel id="posttab">
+						<tree id="postTree" flex="1" hidecolumnpicker="false" seltype="seltype">
+							<treecols>
+								<treecol id="startCol" label="Parameter" flex="2" persist="width"/>
+								<splitter class="tree-splitter"/>
+								<treecol id="timeCol" label="Value" flex="1" persist="width"/>
+							</treecols>
+							<treechildren/>
+						</tree>
+					</tabpanel>
+					<tabpanel id="contenttab">
+						<textbox
+							readonly="true"
+							flex="1"
+							align="stretch"
+							multiline="true"
+							value="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean massa nulla, nonummy quis, accumsan at, aliquet nec, sem. Nam non pede. Ut gravida. Vestibulum auctor massa vel nulla. Sed sed velit. Duis dolor. Nunc venenatis, nibh et pulvinar laoreet, nulla leo varius risus, nec eleifend enim arcu eget ipsum. Fusce posuere vulputate ligula. Sed augue nibh, eleifend eget, rutrum vitae, congue ac, massa. Donec pulvinar venenatis mauris. Donec hendrerit viverra leo. Vivamus lorem."
+						/>
+					</tabpanel>
+				</tabpanels>
+			</tabbox-->
+		</vbox>
+	</vbox>
+	
+	<statusbar id="status-bar">
+		<statusbarpanel class="statusbarpanel-iconic" id="guidedog_sbi" onclick="GuideDog.togglePanel();" src="chrome://guidedog/content/images/statusbar_icon.png" />
+	</statusbar>
+</overlay>

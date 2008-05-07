@@ -1,0 +1,9 @@
+content	guidedog	jar:chrome/guidedog.jar!/content/
+
+overlay	chrome://browser/content/browser.xul	chrome://guidedog/content/overlay.xul
+
+locale	guidedog	en-US	jar:chrome/guidedog!/locale/en-US/
+
+skin	guidedog	classic/1.0	jar:chrome/guidedog.jar!/skin/
+
+style	chrome://global/content/customizeToolbar.xul	chrome://guidedog/skin/guidedog.css

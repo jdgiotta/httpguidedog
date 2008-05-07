@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://guidedog/skin/about.css" type="text/css"?>
+<dialog buttons="accept" id="httpguidedog-about-dialog" title="HTTPGuideDog" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+	<script type="application/x-javascript" src="chrome://guidedog/content/js/about.js"/>
+    <vbox id="httpguidedog-about-details">
+        <hbox>
+            <vbox>
+                <hbox>
+                    <description class="name">HTTPGuideDog</description>
+                    <description class="name">0.3.5</description>
+                </hbox>
+                <description value="Author" class="title"/>
+                <description>John D Giotta</description>
+            </vbox>
+        </hbox>
+        <description value="Homepage" class="title"/>
+        <description onclick="guidedog_visitHomePage()" class="url">http://jdgiotta.googlepages.com/guidedoghomepage</description>
+    </vbox>
+    <separator class="groove" id="httpguidedog-about-separator"/>
+</dialog>

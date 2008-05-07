@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!-- ====================================================================== 
+     Jul 21, 2006 3:27:18 PM                                                        
+
+     GuideDog
+                   
+     John Giotta                                                                
+     ====================================================================== -->
+<project name="project" default="build" basedir=".">
+	<property name="xpi.name" value="guidedog.xpi"/>
+	<property name="jar.name" value="guidedog.jar"/>
+
+
+    <!-- ================================= 
+          target: build              
+         ================================= -->
+    <target name="build" depends="createjar" description="--> description">
+    	<zip destfile="bin/${xpi.name}" basedir="src" includes="chrome/**,chrome.manifest,install.rdf" />
+    	<delete>
+			<fileset dir="src/chrome">
+				<include name="*"/>
+			</fileset>
+		</delete>
+    	<delete dir="src/chrome" />
+    	<copy file="src/guidedog_update.rdf" todir="bin" />
+    </target>
+	
+	<!-- ================================= 
+          target: dev              
+         ================================= -->
+    <target name="dev" description="--> sends jar to firefox folder">
+        <copy overwrite="true" todir="${user.home}\Application Data\Mozilla\Firefox\Profiles\pkwjnamr.dev\extensions\guidedog@jdgiotta.googlepages.com">
+			<fileset dir="src/" id="devSet" excludes="**/chrome.manifest"/>
+        </copy>
+    	
+    	<copy overwrite="true" file="./chrome.manifest" todir="${user.home}\Application Data\Mozilla\Firefox\Profiles\pkwjnamr.dev\extensions\guidedog@jdgiotta.googlepages.com" />
+    </target>
+
+
+    <!-- - - - - - - - - - - - - - - - - - 
+          target: createjar                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="createjar">
+    	<mkdir dir="src/chrome"/>
+    	<zip destfile="src/chrome/${jar.name}" basedir="src" includes="content/**,locale/**,skin/**" />
+    </target>
+
+</project>
